@@ -1,14 +1,24 @@
 package fi.academy.demo;
 
 public class Kaupunki {
+    private int id;
     private String nimi;
     private String maakoodi;
     private int asukasluku;
 
-    public Kaupunki(String nimi, String maakoodi, int asukasluku) {
+    public Kaupunki(int id, String nimi, String maakoodi, int asukasluku) {
+        this.id = id;
         this.nimi = nimi;
         this.maakoodi = maakoodi;
         this.asukasluku = asukasluku;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getNimi() {

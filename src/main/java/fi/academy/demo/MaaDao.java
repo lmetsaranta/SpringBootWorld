@@ -8,6 +8,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
 
+import java.io.Console;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.HashMap;
@@ -37,9 +38,10 @@ public class MaaDao {
     }
 
     public List<Kaupunki> haeKaikkiKaupungit() {
-        String sql = "SELECT name, country_code, population FROM city ORDER BY population";
+        String sql = "SELECT id, name, country_code, population FROM city ORDER BY population";
         List<Kaupunki> palautettavat = jdbc.query(sql, (resultset, i) -> {
             Kaupunki kaupunki = new Kaupunki(
+                    resultset.getInt("id"),
                     resultset.getString("name"),
                     resultset.getString("country_code"),
                     resultset.getInt("population"));
@@ -71,4 +73,22 @@ public class MaaDao {
         return id;
     }
 
+    public int lisaaKaupunki(Kaupunki k) {
+        KeyHolder kh = new GeneratedKeyHolder();
+
+        PreparedStatementCreator prc = connection -> {
+            PreparedStatement pr = connection
+                    .prepareStatement("INSERT INTO city (name, country_code, population) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+            pr.setString(1, k.getNimi());
+            pr.setString(2, k.getMaakoodi());
+            pr.setInt(3, k.getAsukasluku());
+            return pr;
+        };
+
+        jdbc.update(prc, kh);
+        int id = (int)kh.getKeys().get("id");
+        System.out.println("Uusi id on: " + id);
+        k.setId(id);
+        return id;
+    }
 }

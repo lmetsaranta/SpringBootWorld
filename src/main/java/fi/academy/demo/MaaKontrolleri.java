@@ -9,6 +9,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
+@CrossOrigin
 @RestController
 public class MaaKontrolleri {
 
@@ -49,5 +50,16 @@ int id = maadao.lisaaMaa(m);
                 .toUri();
         return ResponseEntity.created(location).build();
 
+    }
+
+    @PostMapping (value = "api/kaupungit")
+    public ResponseEntity<?> lisaaKaupunki (@RequestBody Kaupunki k) {
+        int id = maadao.lisaaKaupunki(k);
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/")
+                .buildAndExpand(id)
+                .toUri();
+        return ResponseEntity.created(location).build();
     }
 }
